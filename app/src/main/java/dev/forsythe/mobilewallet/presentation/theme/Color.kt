@@ -1,4 +1,4 @@
-package dev.forsythe.mobilewallet.ui.theme
+package dev.forsythe.mobilewallet.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
