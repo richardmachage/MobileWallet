@@ -75,5 +75,5 @@ kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", vers
 
 [bundles]
 ktor-client = ["ktorCore", "ktorLogging","ktorSerialization", "ktorOkHttp", "ktorContentNegotiation"]
-hilt = ["hilt-android", "hilt-navigation-compose", "hilt-lifecycle-viewmodel"]
+hilt = ["hilt-android", "hilt-navigation-compose"]
 room = ["room-runtime", "room-ktx", "room-paging" ]
