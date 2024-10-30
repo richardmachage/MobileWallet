@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">MobileWallet</string>
+    <string name="log_in_btn">Log In</string>
+    <string name="pin_lbl">PIN</string>
+    <string name="customer_id_lbl">Customer Id</string>
+    <string name="ok_btn">OK</string>
+    <string name="cancel_btn">Cancel</string>
+    <string name="dismiss_dialog_btn">Dismiss</string>
 </resources>

@@ -76,4 +76,7 @@ dependencies {
     //serializer
     implementation(libs.kotlinx.serialization.json)
 
+    //splash
+    implementation(libs.core.splashscreen)
+
 }
