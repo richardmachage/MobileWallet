@@ -71,6 +71,7 @@ dependencies {
 
     //ktor-client
     implementation(libs.bundles.ktor.client)
+    testImplementation(libs.ktor.client.mock)
 
     //serializer
     implementation(libs.kotlinx.serialization.json)
