@@ -7,7 +7,7 @@ interface CustomerRepo {
 
     suspend fun logIn(customerId:String, pin : String) : Result<CustomerModel>
 
-    suspend fun logOut(customerId: String) : Result<Boolean>
+    suspend fun logOut() : Result<Boolean>
 
     suspend fun getUserDetails(): Result<Flow<CustomerModel>>
 

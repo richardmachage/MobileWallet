@@ -5,5 +5,6 @@ import androidx.paging.LoadState
 data class LogInScreenState(
     var isLoading: Boolean = false,
     var toastMessage : String? = null,
-    var showInfoDialog : Boolean = false
+    var showInfoDialog : Boolean = false,
+    var navigateToHome : Boolean = false,
 )

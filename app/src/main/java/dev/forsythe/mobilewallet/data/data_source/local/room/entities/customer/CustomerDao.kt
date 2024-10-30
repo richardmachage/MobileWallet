@@ -11,8 +11,8 @@ interface CustomerDao {
     @Insert
     suspend fun addCustomer(customer: Customer)
 
-    @Query("DELETE FROM customer_tbl WHERE customerId = :customerId")
-    suspend fun deleteCustomer(customerId: String)
+    @Query("DELETE FROM customer_tbl")
+    suspend fun deleteCustomer()
 
     @Query("SELECT * FROM customer_tbl")
     fun getCustomerDetails(): Flow<Customer>

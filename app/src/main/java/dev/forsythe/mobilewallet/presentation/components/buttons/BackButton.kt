@@ -22,7 +22,7 @@ fun BackButton(
         Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = "Arrow Back",
-            tint = color
+            //tint = color
         )
     }
 

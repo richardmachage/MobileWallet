@@ -13,6 +13,7 @@ import dev.forsythe.mobilewallet.data.data_source.remote.network.model.request.S
 import dev.forsythe.mobilewallet.data.data_source.remote.network.model.response.LogInResponse
 import dev.forsythe.mobilewallet.data.data_source.remote.network.model.response.SendMoneyResponse
 import dev.forsythe.mobilewallet.data.data_source.remote.network.model.response.TransactionResponse
+import dev.forsythe.mobilewallet.utils.BASE_URL
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.mock.MockEngine
@@ -34,7 +35,7 @@ import kotlinx.serialization.json.Json
 import org.junit.Test
 
 class KtorClientIntegrationTest {
-    private val client = KtorClient()
+    private val client = KtorClient(baseUrl = BASE_URL)
     @Test
     fun `test successful login` (): Unit = runBlocking {
         val result = client.customerLogIn(

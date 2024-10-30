@@ -6,4 +6,13 @@
     <string name="ok_btn">OK</string>
     <string name="cancel_btn">Cancel</string>
     <string name="dismiss_dialog_btn">Dismiss</string>
+    <string name="logging_in_progress_text">Logging In...</string>
+    <string name="home_screen_tittle">Home</string>
+    <string name="balance_lbl">Balance</string>
+    <string name="send_money_lbl">Send Money</string>
+    <string name="view_statement_lbl">View Statement</string>
+    <string name="last_transactions_lbl">Last Transactions</string>
+    <string name="profile_lbl">Profile</string>
+    <string name="log_out_lbl">Log Out</string>
+    <string name="loading">Loading..</string>
 </resources>

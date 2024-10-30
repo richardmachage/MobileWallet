@@ -55,12 +55,12 @@ class CustomerRepoImpl @Inject constructor(
 
     }
 
-    override suspend fun logOut(customerId: String): Result<Boolean> {
+    override suspend fun logOut(): Result<Boolean> {
         //delete user data from db
         //update log in state
         //log out
         return try {
-            customerDao.deleteCustomer(customerId = customerId)
+            customerDao.deleteCustomer()
 
             preferenceStore.deleteData(LOG_IN_STATE)
 

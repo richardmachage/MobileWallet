@@ -3,6 +3,7 @@ package dev.forsythe.mobilewallet.data.data_source.remote.network.client
 import dev.forsythe.mobilewallet.data.data_source.remote.network.model.request.LogInRequest
 import dev.forsythe.mobilewallet.data.data_source.remote.network.model.response.LogInResponse
 import dev.forsythe.mobilewallet.utils.BASE_URL
+import dev.forsythe.mobilewallet.utils.BASE_URL_EMULATOR
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
@@ -24,12 +25,14 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 
-class KtorClient{
+class KtorClient(
+    baseUrl : String = BASE_URL_EMULATOR
+){
     val client = HttpClient(OkHttp){
         defaultRequest {
             url {
                 protocol = URLProtocol.HTTP
-                host = BASE_URL
+                host = baseUrl
             }
         }
 

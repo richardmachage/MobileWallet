@@ -7,12 +7,14 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import dev.forsythe.mobilewallet.presentation.components.texts.BoldText
 
 @Composable
 fun InputField(
+    modifier: Modifier = Modifier,
     text: String = "",
     label : String,
     prefix: String? = null,
@@ -20,6 +22,7 @@ fun InputField(
     onValueChange: (String) -> Unit = {}
 ) {
     OutlinedTextField(
+        modifier = modifier,
         prefix = {
             prefix?.let {
                 BoldText(text = prefix)
