@@ -2,6 +2,7 @@ package dev.forsythe.mobilewallet.data.data_source.local.room.entities.transacti
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import dev.forsythe.mobilewallet.domain.models.TransactionModel
 
 @Entity(tableName = "transactions_tbl")
 data class Transaction(
@@ -9,7 +10,17 @@ data class Transaction(
     val id : Int=0,
     val customerId : String,
     val accountNo : String,
-    val amount : Int,
+    val accountTo : String,
+    val amount : Double,
     val status : String,
-    val timestamp : Long
-)
+    val timestamp : Long = System.currentTimeMillis()
+){
+    fun toDomainModel():TransactionModel{
+        return TransactionModel(
+            amount = amount,
+            status = status,
+            timestamp = timestamp,
+            accountTo = accountTo,
+        )
+    }
+}

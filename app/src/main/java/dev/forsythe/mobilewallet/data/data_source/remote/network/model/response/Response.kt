@@ -1,4 +1,4 @@
-package dev.forsythe.mobilewallet.network.model.response
+package dev.forsythe.mobilewallet.data.data_source.remote.network.model.response
 
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.Serializable

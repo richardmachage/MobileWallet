@@ -1,9 +1,9 @@
-package dev.forsythe.mobilewallet.network.model.request
+package dev.forsythe.mobilewallet.data.data_source.remote.network.model.request
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MiniStatementRequest(
+data class BalanceRequest(
     val accountNo: String,
     val customerId: String
 )

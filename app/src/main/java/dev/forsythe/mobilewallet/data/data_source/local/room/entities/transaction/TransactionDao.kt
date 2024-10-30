@@ -21,4 +21,6 @@ interface TransactionDao {
     @Query("SELECT * FROM transactions_tbl ORDER BY timestamp DESC")
     fun getAllTransactions() : Flow<List<Transaction>>
 
+    @Query("UPDATE transactions_tbl SET status = :status WHERE id = :id")
+    fun updateTransactionStatus(status : String, id: Int);
 }
