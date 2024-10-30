@@ -3,9 +3,11 @@ package dev.forsythe.mobilewallet.network.client
 import dev.forsythe.mobilewallet.network.model.request.BalanceRequest
 import dev.forsythe.mobilewallet.network.model.request.LastHundredTransactionsRequest
 import dev.forsythe.mobilewallet.network.model.request.LogInRequest
+import dev.forsythe.mobilewallet.network.model.request.SendMoneyRequest
 import dev.forsythe.mobilewallet.network.model.response.BalanceResponse
 import dev.forsythe.mobilewallet.network.model.response.LogInResponse
 import dev.forsythe.mobilewallet.network.model.response.Response
+import dev.forsythe.mobilewallet.network.model.response.SendMoneyResponse
 import dev.forsythe.mobilewallet.network.model.response.TransactionResponse
 import io.ktor.client.call.body
 import io.ktor.client.request.post
@@ -16,18 +18,18 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 
-suspend fun KtorClient.customerLogIn(logInRequest: LogInRequest) : Response<*> {
-    val result =  this.client.post{
+suspend fun KtorClient.customerLogIn(logInRequest: LogInRequest): Response<*> {
+    val result = this.client.post {
         url("/api/v1/customers/login")
         contentType(ContentType.Application.Json)
         setBody(logInRequest)
     }
 
-    return  if (result.status == HttpStatusCode.OK )
+    return if (result.status == HttpStatusCode.OK)
         Response(
-        body = result.body<LogInResponse>(),
-        statusCode = result.status
-    )
+            body = result.body<LogInResponse>(),
+            statusCode = result.status
+        )
     else
         Response(
             body = result.body<String>(),
@@ -35,8 +37,8 @@ suspend fun KtorClient.customerLogIn(logInRequest: LogInRequest) : Response<*> {
         )
 }
 
-suspend fun KtorClient.accountBalance(balanceRequest: BalanceRequest) : Response<*>{
-     val result = this.client.post{
+suspend fun KtorClient.accountBalance(balanceRequest: BalanceRequest): Response<*> {
+    val result = this.client.post {
         url("/api/v1/accounts/balance")
         contentType(ContentType.Application.Json)
         setBody(balanceRequest)
@@ -44,9 +46,9 @@ suspend fun KtorClient.accountBalance(balanceRequest: BalanceRequest) : Response
 
     return if (result.status == HttpStatusCode.OK)
         Response(
-        body = result.body<BalanceResponse>(),
-        statusCode = result.status
-    )
+            body = result.body<BalanceResponse>(),
+            statusCode = result.status
+        )
     else
         Response(
             body = result.body<String>(),
@@ -54,8 +56,8 @@ suspend fun KtorClient.accountBalance(balanceRequest: BalanceRequest) : Response
         )
 }
 
-suspend fun KtorClient.lastHundredTransactions(lastHundredTransactionsRequest: LastHundredTransactionsRequest) : Response<*>{
-    val  result = this.client.post {
+suspend fun KtorClient.lastHundredTransactions(lastHundredTransactionsRequest: LastHundredTransactionsRequest): Response<*> {
+    val result = this.client.post {
         url("/api/v1/transactions/last-100-transactions")
         contentType(ContentType.Application.Json)
         setBody(lastHundredTransactionsRequest)
@@ -66,9 +68,28 @@ suspend fun KtorClient.lastHundredTransactions(lastHundredTransactionsRequest: L
             body = result.body<List<TransactionResponse>>(),
             statusCode = result.status
         )
-        else
-            Response(
-                body = result.body<String>(),
-                statusCode = result.status
-            )
+    else
+        Response(
+            body = result.body<String>(),
+            statusCode = result.status
+        )
+}
+
+suspend fun KtorClient.sendMoney(sendMoneyRequest: SendMoneyRequest) : Response<*>{
+    val result = this.client.post {
+        url("/api/v1/transactions/send-money")
+        contentType(ContentType.Application.Json)
+        setBody(sendMoneyRequest)
+    }
+
+    return if (result.status == HttpStatusCode.OK)
+        Response(
+            body = result.body<SendMoneyResponse>(),
+            statusCode = result.status
+        )
+    else
+        Response(
+            body = result.body<String>(),
+            statusCode = result.status
+        )
 }

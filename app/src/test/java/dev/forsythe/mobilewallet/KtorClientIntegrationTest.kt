@@ -1,13 +1,17 @@
 package dev.forsythe.mobilewallet
 
+import androidx.compose.runtime.internal.composableLambdaInstance
 import dev.forsythe.mobilewallet.network.client.KtorClient
 import dev.forsythe.mobilewallet.network.client.accountBalance
 import dev.forsythe.mobilewallet.network.client.customerLogIn
 import dev.forsythe.mobilewallet.network.client.lastHundredTransactions
+import dev.forsythe.mobilewallet.network.client.sendMoney
 import dev.forsythe.mobilewallet.network.model.request.BalanceRequest
 import dev.forsythe.mobilewallet.network.model.request.LastHundredTransactionsRequest
 import dev.forsythe.mobilewallet.network.model.request.LogInRequest
+import dev.forsythe.mobilewallet.network.model.request.SendMoneyRequest
 import dev.forsythe.mobilewallet.network.model.response.LogInResponse
+import dev.forsythe.mobilewallet.network.model.response.SendMoneyResponse
 import dev.forsythe.mobilewallet.network.model.response.TransactionResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -47,7 +51,7 @@ class KtorClientIntegrationTest {
         val result = client.customerLogIn(
             logInRequest = LogInRequest(
                 customerId = "CUST100",
-                pin = "1234"
+                pin = "1234M" // pass wrong pin
             )
         )
         assertTrue(result.statusCode != HttpStatusCode.OK)
@@ -72,7 +76,7 @@ class KtorClientIntegrationTest {
         val  result = client.accountBalance(
             balanceRequest = BalanceRequest(
                 customerId = "CUST1001",
-                accountNo = "ACT1001"
+                accountNo = "ACT100" //pass wrong account
             )
         )
         assertTrue(result.statusCode != HttpStatusCode.OK)
@@ -97,11 +101,42 @@ class KtorClientIntegrationTest {
     fun `test failed last hundred transactions` () : Unit = runBlocking{
         val result = client.lastHundredTransactions(
             lastHundredTransactionsRequest = LastHundredTransactionsRequest(
-                customerId = "CUST112"
+                customerId = "CUST112" //passed a wrong ID
             )
         )
 
         assertTrue(result.statusCode != HttpStatusCode.OK)
+        val response = result.body as String
+        println(response)
+    }
+
+    @Test
+    fun `test successful send money` () : Unit = runBlocking {
+        val result = client.sendMoney(
+            sendMoneyRequest = SendMoneyRequest(
+                customerId = "CUST1001",
+                accountFrom = "ACT1001",
+                accountTo = "ACT1002",
+                amount = 5000
+            )
+        )
+
+        assertTrue( result.statusCode == HttpStatusCode.OK)
+        val response = result.body as SendMoneyResponse
+        println(response.response_message)
+    }
+    @Test
+    fun `test failed send money` () : Unit = runBlocking {
+        val result = client.sendMoney(
+            sendMoneyRequest = SendMoneyRequest(
+                customerId = "CUST1001",
+                accountFrom = "ACT1001JK", //passed a wrong account
+                accountTo = "ACT1002",
+                amount = 5000
+            )
+        )
+
+        assertTrue( result.statusCode != HttpStatusCode.OK)
         val response = result.body as String
         println(response)
     }
