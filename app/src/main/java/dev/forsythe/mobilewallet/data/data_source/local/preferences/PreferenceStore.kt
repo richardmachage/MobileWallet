@@ -1,6 +1,5 @@
-package dev.forsythe.mobilewallet.data.local.preferences
+package dev.forsythe.mobilewallet.data.data_source.local.preferences
 
-import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -16,6 +15,7 @@ class PreferenceStore @Inject constructor(
 
     companion object {
         private const val PREFERENCES_FILE_KEY = "com.forsythe.mobileWallet.PREFERENCES"
+
     }
 
     fun saveData(key: String, value: String) {

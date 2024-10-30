@@ -1,4 +1,4 @@
-package dev.forsythe.mobilewallet.data.local.room.entities.transaction
+package dev.forsythe.mobilewallet.data.data_source.local.room.entities.transaction
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

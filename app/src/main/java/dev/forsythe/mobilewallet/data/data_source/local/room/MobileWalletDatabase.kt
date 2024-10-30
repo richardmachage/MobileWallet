@@ -1,12 +1,12 @@
-package dev.forsythe.mobilewallet.data.local.room
+package dev.forsythe.mobilewallet.data.data_source.local.room
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import dev.forsythe.mobilewallet.data.local.room.entities.transaction.Transaction
-import dev.forsythe.mobilewallet.data.local.room.entities.transaction.TransactionDao
+import dev.forsythe.mobilewallet.data.data_source.local.room.entities.transaction.Transaction
+import dev.forsythe.mobilewallet.data.data_source.local.room.entities.transaction.TransactionDao
 
 @Database(
     entities = [Transaction::class],
@@ -23,7 +23,7 @@ abstract class MobileWalletDatabase : RoomDatabase(){
 
         private var INSTANCE : MobileWalletDatabase? = null
 
-        fun getInstance(context: Context):MobileWalletDatabase{
+        fun getInstance(context: Context): MobileWalletDatabase {
             synchronized(this){
                 var instance  = INSTANCE
                 if (instance == null){

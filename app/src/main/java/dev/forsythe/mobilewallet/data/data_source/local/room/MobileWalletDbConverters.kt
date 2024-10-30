@@ -1,4 +1,4 @@
-package dev.forsythe.mobilewallet.data.local.room
+package dev.forsythe.mobilewallet.data.data_source.local.room
 
 import androidx.room.TypeConverter
 
