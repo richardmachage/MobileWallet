@@ -1,9 +1,14 @@
 package dev.forsythe.mobilewallet
 
 import dev.forsythe.mobilewallet.network.client.KtorClient
+import dev.forsythe.mobilewallet.network.client.accountBalance
 import dev.forsythe.mobilewallet.network.client.customerLogIn
+import dev.forsythe.mobilewallet.network.client.lastHundredTransactions
+import dev.forsythe.mobilewallet.network.model.request.BalanceRequest
+import dev.forsythe.mobilewallet.network.model.request.LastHundredTransactionsRequest
 import dev.forsythe.mobilewallet.network.model.request.LogInRequest
 import dev.forsythe.mobilewallet.network.model.response.LogInResponse
+import dev.forsythe.mobilewallet.network.model.response.TransactionResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.mock.MockEngine
@@ -34,51 +39,70 @@ class KtorClientIntegrationTest {
                 pin = "1234"
             )
         )
-
-        assertTrue(result.customerId.isNotEmpty())
-    }
-}
-
-val mockResponse = """
-{
-    "firstName": "John1001",
-    "lastName": "Doe1001",
-    "customerId": "CUST1001",
-    "email": "johndoe1001@gmail.com"
-}
-"""
-
-class KtorClientTest {
-
-    private val client = HttpClient(MockEngine) {
-        engine {
-            addHandler { request ->
-                when (request.url.encodedPath) {
-                    "/api/v1/customers/login" -> {
-                        respond(
-                            content = mockResponse,
-                            status = HttpStatusCode.OK,
-                            headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
-                        )
-                    }
-                    else -> error("Unhandled ${request.url.encodedPath}")
-                }
-            }
-        }
-
-        install(ContentNegotiation) {
-            json(Json { ignoreUnknownKeys = true })
-        }
+        assertTrue(result.statusCode == HttpStatusCode.OK)
     }
 
     @Test
-    fun `test successful login`() = runBlocking {
-        val result = client.post {
-            url("/api/v1/customers/login")
-            contentType(ContentType.Application.Json)
-            setBody(LogInRequest(customerId = "CUST1001", pin = "1234"))
-        }.body<LogInResponse>()
+    fun `test failed login` (): Unit = runBlocking {
+        val result = client.customerLogIn(
+            logInRequest = LogInRequest(
+                customerId = "CUST100",
+                pin = "1234"
+            )
+        )
+        assertTrue(result.statusCode != HttpStatusCode.OK)
+        println(result.body.toString())
 
-        assertTrue(result.customerId.isNotEmpty())
+    }
+
+    @Test
+    fun `test successful account balance check` () : Unit = runBlocking {
+        val  result = client.accountBalance(
+            balanceRequest = BalanceRequest(
+                customerId = "CUST1001",
+                accountNo = "ACT1001"
+            )
+        )
+
+        assertTrue(result.statusCode == HttpStatusCode.OK)
+    }
+
+    @Test
+    fun `test failed account balance check` () : Unit = runBlocking {
+        val  result = client.accountBalance(
+            balanceRequest = BalanceRequest(
+                customerId = "CUST1001",
+                accountNo = "ACT1001"
+            )
+        )
+        assertTrue(result.statusCode != HttpStatusCode.OK)
+        println(result.body.toString())
+
+    }
+
+    @Test
+    fun `test successful last hundred transactions` () : Unit = runBlocking{
+        val result = client.lastHundredTransactions(
+            lastHundredTransactionsRequest = LastHundredTransactionsRequest(
+                customerId = "CUST1122"
+            )
+        )
+
+        assertTrue(result.statusCode == HttpStatusCode.OK)
+        val response = result.body as List<TransactionResponse>
+        println("transaction type: " + response[0].debitOrCredit)
+    }
+
+    @Test
+    fun `test failed last hundred transactions` () : Unit = runBlocking{
+        val result = client.lastHundredTransactions(
+            lastHundredTransactionsRequest = LastHundredTransactionsRequest(
+                customerId = "CUST112"
+            )
+        )
+
+        assertTrue(result.statusCode != HttpStatusCode.OK)
+        val response = result.body as String
+        println(response)
     }
 }
