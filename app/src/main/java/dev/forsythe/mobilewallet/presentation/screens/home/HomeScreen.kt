@@ -1,5 +1,6 @@
 package dev.forsythe.mobilewallet.presentation.screens.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,22 +8,30 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import dev.forsythe.mobilewallet.R
 import dev.forsythe.mobilewallet.presentation.components.CircularProgressIndicatorWallet
+import dev.forsythe.mobilewallet.presentation.components.buttons.BackButton
 import dev.forsythe.mobilewallet.presentation.components.buttons.CardButton
 import dev.forsythe.mobilewallet.presentation.components.texts.BoldText
 import dev.forsythe.mobilewallet.presentation.navigation.MobileWalletRoutes
@@ -36,6 +45,7 @@ fun HomeScreen(
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val context = LocalContext.current
     val customer = homeViewModel.getCustomerDetails().collectAsState(null)
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
     LaunchedEffect(homeViewModel.homeScreenState.gotToLogIn) {
         val goToLogin = homeViewModel.homeScreenState.gotToLogIn
@@ -61,22 +71,42 @@ fun HomeScreen(
         }
     )
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            LargeTopAppBar(
-                title = {
-                    Column {
-                        BoldText(text = stringResource(R.string.home_screen_tittle))
-                        customer.value?.let {
-                            Text(text = "Welcome, ${it.firstName}!")
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    LargeTopAppBar(
+                        title = { BoldText(text = stringResource(R.string.home_screen_tittle)) },
+                        scrollBehavior = scrollBehavior
+                    )
+                    AnimatedVisibility(
+                        scrollBehavior.state.collapsedFraction < 0.5
+                    ) {
+                        Column {
+                            customer.value?.let {
+                                BoldText(
+                                    text = "Welcome, ${it.firstName}!",
+                                    fontSize = 30.sp
+                                )
+                            }
                         }
                     }
                 }
-            )
+            }
         }
     ) {innerPadding->
 
         Box (
-            modifier = Modifier.padding(innerPadding).fillMaxSize(),
+            modifier = Modifier.padding(innerPadding).fillMaxSize().verticalScroll(
+                rememberScrollState()
+            ),
             contentAlignment = Alignment.Center
         ){
 

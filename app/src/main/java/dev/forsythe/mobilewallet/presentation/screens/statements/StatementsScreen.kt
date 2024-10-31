@@ -2,7 +2,6 @@ package dev.forsythe.mobilewallet.presentation.screens.statements
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,32 +9,30 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import dev.forsythe.mobilewallet.data.data_source.TransactionStatus
 import dev.forsythe.mobilewallet.presentation.components.buttons.BackButton
 import dev.forsythe.mobilewallet.presentation.components.buttons.OutlineButtonWallet
 import dev.forsythe.mobilewallet.presentation.components.texts.BoldText
-import dev.forsythe.mobilewallet.presentation.screens.last_transactions.components.TransactionItem
-import dev.forsythe.mobilewallet.presentation.screens.last_transactions.components.TransactionListItem
 import dev.forsythe.mobilewallet.presentation.screens.statements.components.StatementItem
 import dev.forsythe.mobilewallet.presentation.screens.statements.components.StatementListItem
 
@@ -48,6 +45,7 @@ fun StatementsScreen(
     val context  = LocalContext.current
     val records by statementViewModel.records.collectAsState() //collects all the records
     var displayedRecords by remember { mutableIntStateOf(10) }
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
     LaunchedEffect(Unit) {
         statementViewModel.getAllRecords()
@@ -61,12 +59,14 @@ fun StatementsScreen(
         }
     }
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
+            LargeTopAppBar(
                 title = { BoldText(text = "Statement") },
                 navigationIcon = {
                     BackButton(onClick = {navController.navigateUp()})
-                }
+                },
+                scrollBehavior = scrollBehavior
             )
         }
     ) { paddingValues ->
@@ -77,7 +77,7 @@ fun StatementsScreen(
 
             Row (
                 modifier = Modifier.align(Alignment.CenterHorizontally)
-                    .padding(end = 25.dp, start=25.dp)
+                    .padding(end = 25.dp, start=25.dp, top = 20.dp)
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
