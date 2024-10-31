@@ -50,7 +50,7 @@ class LogInViewModel @Inject constructor(
                 //show toast
                 Log.e("LogIn", "onLogIn: ${it.message}", )
                 _logInScreenState = _logInScreenState.copy(isLoading = false)
-                showToast("Log in failed: ${it.localizedMessage}")
+                showToast("Log in failed: ${it.message}")
             }
         }
     }

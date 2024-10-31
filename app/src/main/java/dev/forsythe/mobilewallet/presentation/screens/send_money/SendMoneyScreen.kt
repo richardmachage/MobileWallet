@@ -1,17 +1,22 @@
 package dev.forsythe.mobilewallet.presentation.screens.send_money
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -21,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -29,15 +35,25 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import dev.forsythe.mobilewallet.R
+import dev.forsythe.mobilewallet.domain.models.TransactionModel
 import dev.forsythe.mobilewallet.presentation.components.CircularProgressIndicatorWallet
 import dev.forsythe.mobilewallet.presentation.components.InputField
 import dev.forsythe.mobilewallet.presentation.components.buttons.BackButton
 import dev.forsythe.mobilewallet.presentation.components.buttons.FilledButtonWallet
+import dev.forsythe.mobilewallet.presentation.components.buttons.OutlineButtonWallet
 import dev.forsythe.mobilewallet.presentation.components.dialogs.ConfirmDialog
 import dev.forsythe.mobilewallet.presentation.components.spacers.VerticalSpacer
 import dev.forsythe.mobilewallet.presentation.components.texts.BoldText
+import dev.forsythe.mobilewallet.presentation.navigation.MobileWalletRoutes
+import dev.forsythe.mobilewallet.presentation.screens.last_transactions.components.TransactionItem
+import dev.forsythe.mobilewallet.presentation.screens.last_transactions.components.TransactionListItem
 import dev.forsythe.nisave.common.ui.components.dialogs.InfoDialog
+import io.ktor.client.utils.EmptyContent.contentType
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,6 +64,8 @@ fun SendMoneyScreen(
     val sendMoneyViewModel = hiltViewModel<SendMoneyViewModel>()
     val context = LocalContext.current
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val listOfTransactions: LazyPagingItems<TransactionModel> =
+        sendMoneyViewModel.getAllTransactions().collectAsLazyPagingItems()
 
     CircularProgressIndicatorWallet(
         isLoading = sendMoneyViewModel.sendMoneyScreenState.isLoading,
@@ -56,9 +74,9 @@ fun SendMoneyScreen(
 
     InfoDialog(
         showDialog = sendMoneyViewModel.sendMoneyScreenState.infoDialogMessage != null,
-        title = sendMoneyViewModel.sendMoneyScreenState.dialogTittle?:"",
-        message = sendMoneyViewModel.sendMoneyScreenState.infoDialogMessage?:"",
-        onConfirm = { sendMoneyViewModel.resetDialogs()}
+        title = sendMoneyViewModel.sendMoneyScreenState.dialogTittle ?: "",
+        message = sendMoneyViewModel.sendMoneyScreenState.infoDialogMessage ?: "",
+        onConfirm = { sendMoneyViewModel.resetDialogs() }
     )
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -117,30 +135,28 @@ fun SendMoneyScreen(
                 }
             }
         }
-    ) {paddingValues->
+    ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .verticalScroll(rememberScrollState()),
-            contentAlignment = Alignment.Center
+                .padding(paddingValues),
         ) {
 
-            Column (
+            Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .padding(10.dp)
                     .imePadding(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
-            ){
+            ) {
                 //input account to send money to
                 var accountTo by remember { mutableStateOf("") }
                 InputField(
                     modifier = Modifier.fillMaxWidth(0.9f),
                     text = accountTo,
                     label = "Account you're sending money to",
-                    onValueChange = {text->
+                    onValueChange = { text ->
                         accountTo = text.trim()
                     }
                 )
@@ -151,7 +167,7 @@ fun SendMoneyScreen(
                     modifier = Modifier.fillMaxWidth(0.9f),
                     text = amount,
                     label = "Amount to send",
-                    onValueChange = {text->
+                    onValueChange = { text ->
                         amount = text.trim()
                     },
                     keyboardType = KeyboardType.Number
@@ -162,16 +178,19 @@ fun SendMoneyScreen(
                 var showSendMoneyDialog by remember { mutableStateOf(false) }
                 ConfirmDialog(
                     showDialog = showSendMoneyDialog,
-                    title = sendMoneyViewModel.sendMoneyScreenState.dialogTittle?:"",
-                    message = sendMoneyViewModel.sendMoneyScreenState.confirmDialogMessage?:"",
+                    title = sendMoneyViewModel.sendMoneyScreenState.dialogTittle ?: "",
+                    message = sendMoneyViewModel.sendMoneyScreenState.confirmDialogMessage ?: "",
                     onConfirm = {
                         val intAmount = amount.toIntOrNull()
-                            if (intAmount != null) {
-                                sendMoneyViewModel.onSendMoney(accountTo=accountTo, amount = intAmount)
-                                showSendMoneyDialog = false
-                                amount = ""
-                                accountTo = ""
-                            }
+                        if (intAmount != null) {
+                            sendMoneyViewModel.onSendMoney(
+                                accountTo = accountTo,
+                                amount = intAmount
+                            )
+                            showSendMoneyDialog = false
+                            amount = ""
+                            accountTo = ""
+                        }
                     },
                     onDismiss = {
                         showSendMoneyDialog = false
@@ -185,11 +204,73 @@ fun SendMoneyScreen(
                 FilledButtonWallet(
                     onClick = {
                         showSendMoneyDialog = true
-                        sendMoneyViewModel.showConfirmDialog(title = "Confirm Send Money", message = "Confirm sending of KSH $amount to $accountTo" )
+                        sendMoneyViewModel.showConfirmDialog(
+                            title = "Confirm Send Money",
+                            message = "Confirm sending of KSH $amount to $accountTo"
+                        )
                     },
                     text = stringResource(R.string.send_money_lbl),
                     enabled = amount.isNotBlank() && accountTo.isNotBlank()
                 )
+
+
+            }
+
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 30.dp)
+            ) {
+                AnimatedVisibility(listOfTransactions.itemCount > 0) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+
+                        Text(text = "Recent Transactions")
+                        LazyColumn {
+                            items(
+                                count = listOfTransactions.itemCount,
+                                key = listOfTransactions.itemKey { trans -> trans.id },
+                                contentType = listOfTransactions.itemContentType { "Transaction Model" }
+                            ) { index ->
+                                if (index < 3) {
+                                    val transaction = listOfTransactions[index]
+                                    transaction?.let {
+                                        TransactionListItem(
+                                            transactionItem = TransactionItem(
+                                                id = transaction.id,
+                                                accountTo = transaction.accountTo,
+                                                amount = transaction.amount.toString(),
+                                                status = transaction.status
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+                            item{
+
+                                Box (
+                                    modifier = Modifier.fillMaxWidth(),
+                                    contentAlignment = Alignment.Center
+                                ){
+                                    OutlineButtonWallet(
+                                        onClick = {
+                                            navController.navigate(route = MobileWalletRoutes.LAST_TRANSACTIONS_SCREEN.name) {
+                                                popUpTo(route = MobileWalletRoutes.HOME_SCREEN.name) {
+                                                    inclusive = false
+                                                }
+                                            }
+                                        },
+                                        text = "view All"
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

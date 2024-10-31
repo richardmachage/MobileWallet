@@ -5,12 +5,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.forsythe.mobilewallet.data.data_source.remote.network.model.request.SendMoneyRequest
 import dev.forsythe.mobilewallet.domain.models.CustomerModel
+import dev.forsythe.mobilewallet.domain.models.TransactionModel
 import dev.forsythe.mobilewallet.domain.repository.CustomerRepo
 import dev.forsythe.mobilewallet.domain.repository.TransactionsRepo
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -75,5 +82,17 @@ class SendMoneyViewModel @Inject constructor(
     fun resetDialogs() {
         _sendMoneyScreenState =
             _sendMoneyScreenState.copy(dialogTittle = null, confirmDialogMessage = null, infoDialogMessage = null)
+    }
+
+    fun getAllTransactions(): Flow<PagingData<TransactionModel>> {
+        val pager = Pager(
+            config = PagingConfig(
+                pageSize = 4,
+                prefetchDistance = 4
+            ),
+            pagingSourceFactory = {transactionsRepo.getLastTransactions()}
+        )
+
+        return pager.flow.map { it.map {trans-> trans.toDomainModel() } }
     }
 }

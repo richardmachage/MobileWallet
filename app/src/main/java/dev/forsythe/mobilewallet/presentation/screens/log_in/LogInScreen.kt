@@ -110,7 +110,8 @@ fun LogInScreen(
                     onClick = {
                         logInViewModel.onLogIn(customerId,pin)
                     },
-                    text = stringResource(R.string.log_in_btn)
+                    text = stringResource(R.string.log_in_btn),
+                    enabled = customerId.isNotBlank() && pin.isNotBlank()
                 )
             }
         }
