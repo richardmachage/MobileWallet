@@ -128,9 +128,9 @@ fun HomeScreen(
                         text = stringResource(R.string.view_statement_lbl)
                     )
 
-                    CardButton( // send money
+                    CardButton( // transactions history
                         onClick = {
-                            navController.navigate(route = MobileWalletRoutes.SEND_MONEY_SCREEN.name)
+                            navController.navigate(route = MobileWalletRoutes.LAST_TRANSACTIONS_SCREEN.name)
                         },
                         text = stringResource(R.string.last_transactions_lbl)
                     )

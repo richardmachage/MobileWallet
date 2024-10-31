@@ -17,6 +17,7 @@ data class Transaction(
 ){
     fun toDomainModel():TransactionModel{
         return TransactionModel(
+            id = id,
             amount = amount,
             status = status,
             timestamp = timestamp,

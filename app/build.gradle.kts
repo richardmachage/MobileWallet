@@ -69,6 +69,9 @@ dependencies {
     ksp(libs.room.compiler)
     implementation(libs.bundles.room)
 
+    //paging compose
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.compose)
     //ktor-client
     implementation(libs.bundles.ktor.client)
     testImplementation(libs.ktor.client.mock)

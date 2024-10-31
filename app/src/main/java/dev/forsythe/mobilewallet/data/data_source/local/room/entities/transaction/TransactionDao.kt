@@ -1,5 +1,6 @@
 package dev.forsythe.mobilewallet.data.data_source.local.room.entities.transaction
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -19,7 +20,7 @@ interface TransactionDao {
     suspend fun deleteTransaction(transaction: Transaction)
 
     @Query("SELECT * FROM transactions_tbl ORDER BY timestamp DESC")
-    fun getAllTransactions() : Flow<List<Transaction>>
+    fun getAllTransactions() : PagingSource<Int, Transaction>//Flow<List<Transaction>>
 
     @Query("UPDATE transactions_tbl SET status = :status WHERE id = :id")
     fun updateTransactionStatus(status : String, id: Int);

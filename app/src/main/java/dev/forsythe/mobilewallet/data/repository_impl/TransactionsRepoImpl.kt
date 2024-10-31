@@ -1,5 +1,7 @@
 package dev.forsythe.mobilewallet.data.repository_impl
 
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
 import dev.forsythe.mobilewallet.data.data_source.TransactionStatus
 import dev.forsythe.mobilewallet.data.data_source.local.room.entities.customer.Customer
 import dev.forsythe.mobilewallet.data.data_source.local.room.entities.customer.CustomerDao
@@ -41,9 +43,9 @@ class TransactionsRepoImpl @Inject constructor(
     }
 
 
-    override suspend fun getLastTransactions(): Flow<List<TransactionModel>> {
+    override fun getLastTransactions(): PagingSource<Int, Transaction> {
         //from room
-       return transactionDao.getAllTransactions().map { list -> list.map { it.toDomainModel() } }
+       return transactionDao.getAllTransactions() //.map { list -> list.map { it.toDomainModel() } }
     }
 
     override suspend fun getMiniStatement(customerId: String): Result<List<TransactionResponse>> {
