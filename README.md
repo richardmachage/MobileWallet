@@ -10,16 +10,11 @@ Mobile Wallet is an Android app simulating a digital wallet, leveraging modern A
 - **Jetpack Navigation** (navigation framework)
 - **Ktor Client** (HTTP client for API interactions)
 - **Hilt** (for dependency injection)
-## Sample Screenshots
-![logIn (1)](https://github.com/user-attachments/assets/e2ee37a8-4d78-4faa-8027-deba3cd32c96) ![logOut](https://github.com/user-attachments/assets/7117337c-d88e-489c-87ae-cc9e8bf4a4be) ![profile](https://github.com/user-attachments/assets/cf20946d-e544-44f1-971d-8b2e153e9ddb) ![home (4)](https://github.com/user-attachments/assets/34de89e6-55a1-4aad-adcf-74d9caf4253a) ![sendMoneyDialog](https://github.com/user-attachments/assets/3d802d95-7164-4581-ad49-5fe3dc50af9b) ![sendMoneyScreen](https://github.com/user-attachments/assets/fd63d20b-1490-4ef8-b4df-674c39ea6dbf)  ![statement](https://github.com/user-attachments/assets/722b1861-c4b0-41d1-8e5a-22dffe1c9706) ![transactionsHistory](https://github.com/user-attachments/assets/9961f2b8-4014-4b42-af40-6591a8afeb9c)
+## Sample Screenshots : Light
+![logOutLight](https://github.com/user-attachments/assets/7281571e-4a57-4a5e-9f81-ada8245e778d) ![sendMoneyLight](https://github.com/user-attachments/assets/6fec06ee-98a0-4b54-83ff-5460d666cd76) ![transactionHistoryLight](https://github.com/user-attachments/assets/e22a0fce-97f7-4021-8f62-ebc87725582c)
 
-
-
-
-
-
-
-
+## Sample Screenshots : Dark
+![logIn](https://github.com/user-attachments/assets/12159070-3951-4e96-88fd-d38472d64d39) ![profile](https://github.com/user-attachments/assets/05e2f5ae-970a-4ab3-8e25-8bd4ef182cb2) ![sendMoneyDialog](https://github.com/user-attachments/assets/0824db55-336e-4fec-bbb9-7556738f1199)
 
 
 
