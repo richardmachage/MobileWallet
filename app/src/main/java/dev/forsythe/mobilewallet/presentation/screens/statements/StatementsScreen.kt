@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -74,7 +75,6 @@ fun StatementsScreen(
             modifier = Modifier.padding(paddingValues).fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-
             Row (
                 modifier = Modifier.align(Alignment.CenterHorizontally)
                     .padding(end = 25.dp, start=25.dp, top = 20.dp)
@@ -92,7 +92,9 @@ fun StatementsScreen(
                 )
             }
 
-            LazyColumn()
+            LazyColumn(
+                modifier = Modifier.fillMaxHeight(0.9f).padding(10.dp)
+            )
             {
                 //local pagination
                 items(records.take(displayedRecords)) { record ->
@@ -103,6 +105,7 @@ fun StatementsScreen(
                         )
                     )
                 }
+
                 item {
                     if (displayedRecords < records.size) {
                         //Load more button
@@ -111,8 +114,8 @@ fun StatementsScreen(
                             onClick = { displayedRecords += 20 },
                             text = "Load More"
                         )
-
                     }
+
                 }
             }
 
