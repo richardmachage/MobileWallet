@@ -13,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,7 +35,7 @@ fun HomeScreen(
 ){
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val context = LocalContext.current
-
+    val customer = homeViewModel.getCustomerDetails().collectAsState(null)
 
     LaunchedEffect(homeViewModel.homeScreenState.gotToLogIn) {
         val goToLogin = homeViewModel.homeScreenState.gotToLogIn
@@ -65,7 +66,9 @@ fun HomeScreen(
                 title = {
                     Column {
                         BoldText(text = stringResource(R.string.home_screen_tittle))
-                        Text(text = "Welcome, Mark!")
+                        customer.value?.let {
+                            Text(text = "Welcome, ${it.firstName}!")
+                        }
                     }
                 }
             )

@@ -31,7 +31,8 @@ class CustomerRepoImpl @Inject constructor(
                 val response = result.body as LogInResponse
                 val accountNo = (accountResult.body as AccountResponse).accountNo
                 val customer = CustomerModel(
-                    name = response.firstName + "" + response.lastName,
+                    firstName = response.firstName,
+                    lastName = response.lastName,
                     id = response.customerId,
                     email = response.email,
                     account = accountNo
@@ -70,11 +71,7 @@ class CustomerRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserDetails(): Result<Flow<CustomerModel>> {
-        return try {
-            Result.success(customerDao.getCustomerDetails().map { it.toDomainModel() })
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    override fun getUserDetails(): Flow<CustomerModel> {
+        return customerDao.getCustomerDetails().map { it.toDomainModel() }
     }
 }

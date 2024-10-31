@@ -3,7 +3,8 @@ package dev.forsythe.mobilewallet.domain.models
 import dev.forsythe.mobilewallet.data.data_source.local.room.entities.customer.Customer
 
 data class CustomerModel(
-    val name : String,
+    val firstName : String,
+    val lastName : String,
     val id : String,
     val account : String,
     val email : String
@@ -11,7 +12,8 @@ data class CustomerModel(
     fun toDataModel():Customer{
         return Customer(
             customerId = id,
-            name = name,
+            firstName = firstName,
+            lastName = lastName,
             account = account,
             email = email
         )

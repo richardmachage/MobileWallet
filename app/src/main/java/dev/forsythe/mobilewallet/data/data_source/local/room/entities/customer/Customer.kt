@@ -11,13 +11,15 @@ data class Customer(
     @PrimaryKey(autoGenerate = true)
     val id : Int =0,
     val customerId : String,
-    val name : String,
+    val firstName : String,
+    val lastName : String,
     val account: String,
     val email : String
 ){
     fun toDomainModel():CustomerModel{
         return CustomerModel(
-            name= name,
+            firstName= firstName,
+            lastName = lastName,
             id = customerId,
             account=account,
             email=email

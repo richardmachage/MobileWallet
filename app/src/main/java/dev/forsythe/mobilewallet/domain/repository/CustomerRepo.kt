@@ -9,6 +9,6 @@ interface CustomerRepo {
 
     suspend fun logOut() : Result<Boolean>
 
-    suspend fun getUserDetails(): Result<Flow<CustomerModel>>
+    fun getUserDetails(): Flow<CustomerModel>
 
 }

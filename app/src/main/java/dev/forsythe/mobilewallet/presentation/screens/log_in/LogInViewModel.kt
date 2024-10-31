@@ -20,7 +20,7 @@ class LogInViewModel @Inject constructor(
     val  logInScreenState : LogInScreenState
         get() = _logInScreenState
 
-    fun showToast(message:String){
+    private fun showToast(message:String){
         _logInScreenState = _logInScreenState.copy(toastMessage = message)
     }
 
