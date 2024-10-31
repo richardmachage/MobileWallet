@@ -1,7 +1,6 @@
 package dev.forsythe.mobilewallet.presentation.screens.home
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +13,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -26,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -36,9 +33,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import dev.forsythe.mobilewallet.R
 import dev.forsythe.mobilewallet.presentation.components.CircularProgressIndicatorWallet
-import dev.forsythe.mobilewallet.presentation.components.buttons.BackButton
 import dev.forsythe.mobilewallet.presentation.components.buttons.CardButton
 import dev.forsythe.mobilewallet.presentation.components.dialogs.ConfirmDialog
+import dev.forsythe.mobilewallet.presentation.components.spacers.VerticalSpacer
 import dev.forsythe.mobilewallet.presentation.components.texts.BoldText
 import dev.forsythe.mobilewallet.presentation.navigation.MobileWalletRoutes
 import dev.forsythe.nisave.common.ui.components.dialogs.InfoDialog
@@ -211,6 +208,19 @@ fun HomeScreen(
                         text = stringResource(R.string.log_out_lbl)
                     )
 
+                }
+                VerticalSpacer(10)
+                AnimatedVisibility(
+                    scrollBehavior.state.collapsedFraction > 0.5
+                ) {
+                    Column {
+                        customer.value?.let {
+                            BoldText(
+                                text = "Welcome, ${it.firstName}!",
+                                fontSize = 30.sp
+                            )
+                        }
+                    }
                 }
             }
         }
