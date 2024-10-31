@@ -1,7 +1,5 @@
 package dev.forsythe.mobilewallet.presentation.screens.send_money
 
-import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,15 +9,9 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -30,23 +22,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import dev.forsythe.mobilewallet.R
-import dev.forsythe.mobilewallet.presentation.components.CircularImage
+import dev.forsythe.mobilewallet.presentation.components.CircularProgressIndicatorWallet
 import dev.forsythe.mobilewallet.presentation.components.InputField
 import dev.forsythe.mobilewallet.presentation.components.buttons.BackButton
 import dev.forsythe.mobilewallet.presentation.components.buttons.FilledButtonWallet
+import dev.forsythe.mobilewallet.presentation.components.dialogs.ConfirmDialog
 import dev.forsythe.mobilewallet.presentation.components.spacers.VerticalSpacer
 import dev.forsythe.mobilewallet.presentation.components.texts.BoldText
-import dev.forsythe.mobilewallet.presentation.components.xOffset
-import dev.forsythe.mobilewallet.presentation.components.yOffset
+import dev.forsythe.nisave.common.ui.components.dialogs.InfoDialog
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,6 +48,17 @@ fun SendMoneyScreen(
     val context = LocalContext.current
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
+    CircularProgressIndicatorWallet(
+        isLoading = sendMoneyViewModel.sendMoneyScreenState.isLoading,
+        displayText = "Sending Money..."
+    )
+
+    InfoDialog(
+        showDialog = sendMoneyViewModel.sendMoneyScreenState.infoDialogMessage != null,
+        title = sendMoneyViewModel.sendMoneyScreenState.dialogTittle?:"",
+        message = sendMoneyViewModel.sendMoneyScreenState.infoDialogMessage?:"",
+        onConfirm = { sendMoneyViewModel.resetDialogs()}
+    )
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -156,15 +157,37 @@ fun SendMoneyScreen(
 
                 )
 
+                //confirm send money dialog
+                var showSendMoneyDialog by remember { mutableStateOf(false) }
+                ConfirmDialog(
+                    showDialog = showSendMoneyDialog,
+                    title = sendMoneyViewModel.sendMoneyScreenState.dialogTittle?:"",
+                    message = sendMoneyViewModel.sendMoneyScreenState.confirmDialogMessage?:"",
+                    onConfirm = {
+                        val intAmount = amount.toIntOrNull()
+                            if (intAmount != null) {
+                                sendMoneyViewModel.onSendMoney(accountTo=accountTo, amount = intAmount)
+                                showSendMoneyDialog = false
+                                amount = ""
+                                accountTo = ""
+                            }
+                    },
+                    onDismiss = {
+                        showSendMoneyDialog = false
+                        sendMoneyViewModel.resetDialogs()
+                        amount = ""
+                        accountTo = ""
+                    }
+                )
                 VerticalSpacer(20)
-
                 //send money button
-
                 FilledButtonWallet(
                     onClick = {
-                        Toast.makeText(context,"send money clicked", Toast.LENGTH_SHORT).show()
+                        showSendMoneyDialog = true
+                        sendMoneyViewModel.showConfirmDialog(title = "Confirm Send Money", message = "Confirm sending of KSH $amount to $accountTo" )
                     },
-                    text = stringResource(R.string.send_money_lbl)
+                    text = stringResource(R.string.send_money_lbl),
+                    enabled = amount.isNotBlank() && accountTo.isNotBlank()
                 )
             }
         }

@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -92,7 +93,9 @@ class TransactionsRepoImpl @Inject constructor(
         }
         catch (e : Exception){
             //failed also update status to failed
-            transactionDao.updateTransactionStatus(status = TransactionStatus.FAILED.name, id = transactionId.toInt() )
+           // withContext(Dispatchers.IO){
+                transactionDao.updateTransactionStatus(status = TransactionStatus.FAILED.name, id = transactionId.toInt() )
+            //}
             Result.failure(e)
         }
     }

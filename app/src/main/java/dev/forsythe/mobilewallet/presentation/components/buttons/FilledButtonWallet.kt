@@ -10,11 +10,13 @@ import androidx.compose.ui.Modifier
 fun FilledButtonWallet(
     modifier: Modifier = Modifier,
     onClick : () -> Unit,
-    text : String
+    text : String,
+    enabled : Boolean = true
 ){
     FilledTonalButton(
         modifier = modifier,
-        onClick = onClick
+        onClick = onClick,
+        enabled = enabled
     ) {
         Text(text = text)
     }

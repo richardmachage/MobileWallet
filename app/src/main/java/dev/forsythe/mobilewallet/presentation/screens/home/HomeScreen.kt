@@ -96,7 +96,10 @@ fun HomeScreen(
                ){
                    CardButton( //balance
                        onClick = {
-                           homeViewModel.showDialog(title = "Account Balance", message = "You outstanding balance is KES 50000")
+                           customer.value?.let {
+                               homeViewModel.onShowBalance(accountNo = it.account, customerId = it.id)
+                           }
+                          // homeViewModel.showDialog(title = "Account Balance", message = "You outstanding balance is KES 50000")
                        },
                        text = stringResource(R.string.balance_lbl)
                    )
