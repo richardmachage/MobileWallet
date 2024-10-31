@@ -5,3 +5,4 @@ const val BASE_URL = "localhost:8092/springboot-rest-api" //url for  testing in 
 
 //shared preferences
 const val LOG_IN_STATE = "log_in_state"
+const val CUSTOMER_ID = "customer_Id"

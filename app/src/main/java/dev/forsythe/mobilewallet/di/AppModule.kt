@@ -60,7 +60,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesCustomerRepo(ktorClient: KtorClient, customerDao: CustomerDao, preferenceStore: PreferenceStore): CustomerRepo{
-        return CustomerRepoImpl(ktorClient = ktorClient, customerDao = customerDao, preferenceStore = preferenceStore)
+    fun providesCustomerRepo(ktorClient: KtorClient, customerDao: CustomerDao, preferenceStore: PreferenceStore, mobileWalletDatabase: MobileWalletDatabase): CustomerRepo{
+        return CustomerRepoImpl(ktorClient = ktorClient, customerDao = customerDao, preferenceStore = preferenceStore, mobileWalletDatabase = mobileWalletDatabase)
     }
 }

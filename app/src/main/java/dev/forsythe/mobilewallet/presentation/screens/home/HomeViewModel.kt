@@ -3,17 +3,14 @@ package dev.forsythe.mobilewallet.presentation.screens.home
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.app.NotificationCompat.MessagingStyle.Message
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.forsythe.mobilewallet.R
 import dev.forsythe.mobilewallet.domain.models.CustomerModel
 import dev.forsythe.mobilewallet.domain.repository.CustomerRepo
 import dev.forsythe.mobilewallet.domain.repository.TransactionsRepo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
