@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import dev.forsythe.mobilewallet.R
 import dev.forsythe.mobilewallet.presentation.components.CircularProgressIndicatorWallet
 import dev.forsythe.mobilewallet.presentation.components.InputField
+import dev.forsythe.mobilewallet.presentation.components.PasswordInputField
 import dev.forsythe.mobilewallet.presentation.components.buttons.FilledButtonWallet
 import dev.forsythe.mobilewallet.presentation.components.spacers.VerticalSpacer
 import dev.forsythe.mobilewallet.presentation.components.texts.BoldText
@@ -69,11 +70,12 @@ fun LogInScreen(
             contentAlignment = Alignment.Center
         ){
 
+
             BoldText(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = 50.dp),
-                text = stringResource(R.string.log_in_btn),
+                text = stringResource(R.string.welcome_log_in),
                 fontSize = 32.sp,
             )
 
@@ -81,6 +83,14 @@ fun LogInScreen(
                 modifier = Modifier.fillMaxWidth().padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                BoldText(
+                    modifier = Modifier
+                        //.align(Alignment.TopCenter)
+                        .padding(top = 50.dp),
+                    text = "Log in to proceed...",
+                    fontSize = 22.sp,
+                )
+
                 //input id
                 var customerId by remember { mutableStateOf("") }
                 InputField(
@@ -93,12 +103,11 @@ fun LogInScreen(
                 )
                 //input pin
                 var pin by remember { mutableStateOf("") }
-                InputField(
+
+                PasswordInputField(
                     modifier = Modifier.fillMaxWidth(),
-                    text = pin,
-                    label = stringResource(R.string.pin_lbl),
-                    keyboardType = KeyboardType.Number,
-                    onValueChange = {text->
+                    password = pin,
+                    onPasswordChange = {text->
                         pin = text.trim()
                     }
                 )

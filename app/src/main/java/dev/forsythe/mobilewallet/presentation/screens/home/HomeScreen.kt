@@ -1,6 +1,7 @@
 package dev.forsythe.mobilewallet.presentation.screens.home
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,10 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -33,6 +38,7 @@ import dev.forsythe.mobilewallet.R
 import dev.forsythe.mobilewallet.presentation.components.CircularProgressIndicatorWallet
 import dev.forsythe.mobilewallet.presentation.components.buttons.BackButton
 import dev.forsythe.mobilewallet.presentation.components.buttons.CardButton
+import dev.forsythe.mobilewallet.presentation.components.dialogs.ConfirmDialog
 import dev.forsythe.mobilewallet.presentation.components.texts.BoldText
 import dev.forsythe.mobilewallet.presentation.navigation.MobileWalletRoutes
 import dev.forsythe.nisave.common.ui.components.dialogs.InfoDialog
@@ -61,6 +67,22 @@ fun HomeScreen(
         isLoading = homeViewModel.homeScreenState.isLoading,
         displayText = stringResource(R.string.loading)
     )
+
+    //Log out dialog
+    var showLogOutDialog by remember {   mutableStateOf(false)}
+    ConfirmDialog(
+        showDialog = showLogOutDialog,
+        title = "Log Out",
+        message = "Are you sure you want to log out?",
+        onConfirm = {
+            homeViewModel.onLogout()
+            showLogOutDialog = false
+        },
+        onDismiss = {
+            showLogOutDialog = false
+        }
+    )
+
 
     InfoDialog(
         showDialog = homeViewModel.homeScreenState.dialogInfo != null,
@@ -184,8 +206,7 @@ fun HomeScreen(
 
                     CardButton( //Logout
                         onClick = {
-                            homeViewModel.onLogout()
-                            //navController.navigate(route = MobileWalletRoutes.LOG_IN_SCREEN.name)
+                            showLogOutDialog = true
                         },
                         text = stringResource(R.string.log_out_lbl)
                     )
