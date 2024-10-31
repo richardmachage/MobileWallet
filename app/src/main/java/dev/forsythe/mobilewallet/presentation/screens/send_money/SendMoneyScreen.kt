@@ -1,18 +1,52 @@
 package dev.forsythe.mobilewallet.presentation.screens.send_money
 
+import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import dev.forsythe.mobilewallet.R
+import dev.forsythe.mobilewallet.presentation.components.CircularImage
+import dev.forsythe.mobilewallet.presentation.components.InputField
 import dev.forsythe.mobilewallet.presentation.components.buttons.BackButton
+import dev.forsythe.mobilewallet.presentation.components.buttons.FilledButtonWallet
+import dev.forsythe.mobilewallet.presentation.components.spacers.VerticalSpacer
 import dev.forsythe.mobilewallet.presentation.components.texts.BoldText
+import dev.forsythe.mobilewallet.presentation.components.xOffset
+import dev.forsythe.mobilewallet.presentation.components.yOffset
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -20,23 +54,119 @@ import dev.forsythe.mobilewallet.presentation.components.texts.BoldText
 fun SendMoneyScreen(
     navController: NavController
 ) {
+    val sendMoneyViewModel = hiltViewModel<SendMoneyViewModel>()
+    val context = LocalContext.current
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
-                title = { BoldText(text = "Send Money") },
-                navigationIcon = {
-                    BackButton(onClick = { navController.navigateUp() })
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    LargeTopAppBar(
+                        title = { BoldText(text = "Send Money") },
+                        navigationIcon = {
+                            BackButton(onClick = { navController.navigateUp() })
+                        },
+                        scrollBehavior = scrollBehavior
+                    )
+                    /*AnimatedVisibility(
+                        scrollBehavior.state.collapsedFraction < 0.5
+                    ) {
+
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Box {
+                                CircularImage(
+                                    image = painterResource(R.mipmap.blank_profile),
+                                    height = 200,
+                                    width = 200,
+                                    contentScale = ContentScale.Crop
+                                )
+
+                                IconButton(
+                                    modifier = Modifier
+                                        .yOffset(5)
+                                        .xOffset(10)
+                                        .align(
+                                            Alignment.BottomEnd
+                                        ),
+                                    onClick = {
+                                        //TODO
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Edit,
+                                        contentDescription = "edit",
+                                    )
+                                }
+                            }
+                        }
+                    }*/
                 }
-            )
+            }
         }
-    ) {
+    ) {paddingValues->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it),
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState()),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Send Money")
+
+            Column (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(10.dp)
+                    .imePadding(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                //input account to send money to
+                var accountTo by remember { mutableStateOf("") }
+                InputField(
+                    modifier = Modifier.fillMaxWidth(0.9f),
+                    text = accountTo,
+                    label = "Account you're sending money to",
+                    onValueChange = {text->
+                        accountTo = text.trim()
+                    }
+                )
+                VerticalSpacer(10)
+                //input amount to send
+                var amount by remember { mutableStateOf("") }
+                InputField(
+                    modifier = Modifier.fillMaxWidth(0.9f),
+                    text = amount,
+                    label = "Amount to send",
+                    onValueChange = {text->
+                        amount = text.trim()
+                    },
+                    keyboardType = KeyboardType.Number
+
+                )
+
+                VerticalSpacer(20)
+
+                //send money button
+
+                FilledButtonWallet(
+                    onClick = {
+                        Toast.makeText(context,"send money clicked", Toast.LENGTH_SHORT).show()
+                    },
+                    text = stringResource(R.string.send_money_lbl)
+                )
+            }
         }
     }
 
